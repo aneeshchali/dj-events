@@ -1,5 +1,6 @@
 import Layout from "@/components/Layout";
 import Item from "@/components/Item";
+import axios from "axios";
 
 import { API_URL } from "@/config/index";
 
@@ -29,6 +30,6 @@ export async function getStaticProps() {
   const events = await res.json();
   return {
     props: { events },
-    revalidate: 2,
+    revalidate: 1,
   };
 }

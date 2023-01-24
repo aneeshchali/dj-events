@@ -1,11 +1,12 @@
 import { useRouter } from "next/router";
-import Image from "next/image";
-import { FaPencilAlt, FaTimes } from "react-icons/fa";
+import Image from "next/image"
 import React from "react";
+import Link from "next/link";
+import { FaPencilAlt, FaTimes } from "react-icons/fa";
 import { API_URL } from "@/config";
 import Layout from "@/components/Layout";
 import styles from "@/styles/Event.module.css";
-import Link from "next/link";
+
 
 function EventPage({ evt }) {
   const router = useRouter();
@@ -54,8 +55,8 @@ function EventPage({ evt }) {
         <h3>Venue:{evt.venue}</h3>
         <p>{evt.address}</p>
 
-        <Link href="/events">
-          <button className={styles.back}>Go Back {"<"}</button>
+        <Link legacyBehavior href="/events">
+          <a className={styles.back}>Go Back {"<"}</a>
         </Link>
       </div>
     </Layout>
