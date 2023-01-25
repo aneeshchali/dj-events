@@ -3,4 +3,9 @@ const nextConfig = {
   reactStrictMode: false,
 };
 
-module.exports = { images: { domains: ["res.cloudinary"] } };
+module.exports = {
+  experiments: {
+    topLevelAwait: true,
+  },
+  images: { domains: ["res.cloudinary.com"] },
+};

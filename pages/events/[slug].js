@@ -1,12 +1,13 @@
 import { useRouter } from "next/router";
-import Image from "next/image"
+import Image from "next/image";
 import React from "react";
 import Link from "next/link";
 import { FaPencilAlt, FaTimes } from "react-icons/fa";
 import { API_URL } from "@/config";
 import Layout from "@/components/Layout";
 import styles from "@/styles/Event.module.css";
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function EventPage({ evt }) {
   const router = useRouter();
@@ -14,8 +15,20 @@ function EventPage({ evt }) {
     return <h1>Loading..</h1>;
   }
 
-  const deleteEventHandler = (e) => {
-    console.log("aneesh");
+  const deleteEventHandler = async (e) => {
+    if (confirm("are u sure")) {
+      console.log(evt.id);
+      const res = await fetch(`${API_URL}/api/event/${evt.id}`, {
+        method: "DELETE",
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        toast.error(data.message);
+      } else {
+        router.push("/events");
+      }
+    }
   };
   return (
     <Layout>
@@ -31,29 +44,34 @@ function EventPage({ evt }) {
       </button> */}
       <div className={styles.event}>
         <div className={styles.controls}>
-          <Link href={`events/edit/${evt.id}`}>
+          <Link href={`events/edit/${evt.attributes.id}`}>
             <FaPencilAlt />
             Edit Event
           </Link>
-          <a href="#" className={styles.delete} onClick={deleteEventHandler}>
+          <button className={styles.delete} onClick={deleteEventHandler}>
             <FaTimes /> Delete Event
-          </a>
+          </button>
         </div>
         <span>
-          {evt.date} at {evt.time}
+          {evt.attributes.date} at {evt.attributes.time}
         </span>
-        <h1>{evt.name}</h1>
-        {evt.image && (
+        <h1>{evt.attributes.name}</h1>
+        <ToastContainer />
+        {evt.attributes.image && (
           <div className={styles.image}>
-            <Image src={evt.image} width={960} height={600} />
+            <Image
+              src={evt.attributes.image.data?.attributes.formats.large.url}
+              width={960}
+              height={600}
+            />
           </div>
         )}
         <h3>Performers</h3>
-        <p>{evt.performers}</p>
+        <p>{evt.attributes.performers}</p>
         <h3>Description</h3>
-        <p>{evt.description}</p>
-        <h3>Venue:{evt.venue}</h3>
-        <p>{evt.address}</p>
+        <p>{evt.attributes.description}</p>
+        <h3>Venue:{evt.attributes.venue}</h3>
+        <p>{evt.attributes.address}</p>
 
         <Link legacyBehavior href="/events">
           <a className={styles.back}>Go Back {"<"}</a>
@@ -62,38 +80,42 @@ function EventPage({ evt }) {
     </Layout>
   );
 }
-// export async function getStaticPaths() {
-//   const res = await fetch(`${API_URL}/api/events`);
-//   const events = await res.json();
+export async function getStaticPaths() {
+  const res = await fetch(`${API_URL}/api/event?populate=*`);
+  const events = await res.json();
+  const fevents = events.data;
 
-//   const paths = events.map((val) => ({
-//     params: {
-//       slug: val.slug,
-//     },
-//   }));
+  const paths = fevents.map((val) => ({
+    params: {
+      slug: val.attributes.slug,
+    },
+  }));
 
-//   return {
-//     paths: paths,
-//     fallback: true,
-//   };
-// }
+  return {
+    paths: paths,
+    fallback: true,
+  };
+}
 
-// export async function getStaticProps({ params: { slug } }) {
+export async function getStaticProps({ params: { slug } }) {
+  const res = await fetch(
+    `${API_URL}/api/event?populate=*&filters[slug][$eq]=${slug}`
+  );
+
+  const events = await res.json();
+  const fevents = events.data;
+
+  return { props: { evt: fevents[0] }, revalidate: 1 };
+}
+
+export default EventPage;
+
+// export async function getServerSideProps({ query: { slug } }) {
 //   const res = await fetch(`${API_URL}/api/events/${slug}`);
 
 //   const events = await res.json();
 
-//   return { props: { evt: events[0] }, revalidate: 1 };
+//   return { props: { evt: events[0] } };
 // }
 
 // export default EventPage;
-
-export async function getServerSideProps({ query: { slug } }) {
-  const res = await fetch(`${API_URL}/api/events/${slug}`);
-
-  const events = await res.json();
-
-  return { props: { evt: events[0] } };
-}
-
-export default EventPage;

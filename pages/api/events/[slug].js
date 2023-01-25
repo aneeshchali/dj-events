@@ -1,7 +1,11 @@
-const { events } = require("./data.json");
+const res = await fetch(`${API_URL}/api/event?populate=*`);
+const events = await res.json();
+
+const yevents = events.data;
+
 
 export default function handler(req, res) {
-  const evt = events.filter((val) => val.slug === req.query.slug);
+  const evt = yevents.filter((val) => val.attributes.slug === req.query.slug);
 
   if (req.method === "GET") {
     res.status(200).json(evt);

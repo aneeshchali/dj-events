@@ -1,14 +1,18 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import styles from "styles/Item.module.css";
+import styles from "@/styles/Item.module.css";
 
 const Item = ({ evt }) => {
   return (
     <div className={styles.event}>
       <div className={styles.img}>
         <Image
-          src={evt.image ? evt.image : "/images/event-default.png"}
+          src={
+            evt.attributes.image
+              ? evt.attributes.image.data.attributes.formats.thumbnail.url
+              : "/images/event-default.png"
+          }
           width={170}
           height={170}
           alt="image"
@@ -16,12 +20,12 @@ const Item = ({ evt }) => {
       </div>
       <div className={styles.info}>
         <span>
-          {evt.date} at {evt.time}
+          {evt.attributes.date} at {evt.attributes.time}
         </span>
-        <h3>{evt.name}</h3>
+        <h3>{evt.attributes.name}</h3>
       </div>
       <div style={styles.link}>
-        <Link href={`/events/${evt.slug}`}>
+        <Link href={`/events/${evt.attributes.slug}`}>
           <button className="btn">Details</button>
         </Link>
       </div>
