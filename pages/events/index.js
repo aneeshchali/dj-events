@@ -1,8 +1,11 @@
 import Layout from "@/components/Layout";
 import Item from "@/components/Item";
+import Link from "next/link";
 import { API_URL } from "@/config/index";
 
-export default function EventsPage({ fevents }) {
+const PER_PAGE = 2;
+
+export default function EventsPage({ fevents, tpage, page }) {
   return (
     <Layout>
       <h1>Events</h1>
@@ -11,16 +14,28 @@ export default function EventsPage({ fevents }) {
       {fevents.map((evt) => (
         <Item key={evt.id} evt={evt} />
       ))}
+
+      {page > 1 && (
+        <Link legacyBehavior href={`events?page=${+page - 1}`}>
+          <a className="btn-secondary">Prev</a>
+        </Link>
+      )}
+      {page < tpage && (
+        <Link legacyBehavior href={`events?page=${+page + 1}`}>
+          <a className="btn-secondary">Next</a>
+        </Link>
+      )}
     </Layout>
   );
 }
 
-export async function getStaticProps() {
-  const res = await fetch(`${API_URL}/api/event?populate=*`);
+export async function getServerSideProps({ query: { page = 1 } }) {
+  const res = await fetch(
+    `${API_URL}/api/event?pagination[page]=${page}&pagination[pageSize]=2&populate=*`
+  );
   const events = await res.json();
-  const fevents = events.data
+  const fevents = events.data;
   return {
-    props: { fevents },
-    revalidate: 1,
+    props: { fevents, tpage: events.meta.pagination.pageCount, page },
   };
 }

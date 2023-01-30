@@ -10,7 +10,7 @@ const Item = ({ evt }) => {
         <Image
           src={
             evt.attributes.image
-              ? evt.attributes.image.data.attributes.formats.thumbnail.url
+              ? evt.attributes.image.data?.attributes.formats.thumbnail.url
               : "/images/event-default.png"
           }
           width={170}

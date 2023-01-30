@@ -44,13 +44,17 @@ function EventPage({ evt }) {
       </button> */}
       <div className={styles.event}>
         <div className={styles.controls}>
-          <Link href={`events/edit/${evt.attributes.id}`}>
+          <Link href={`edit/${evt.id}`}>
             <FaPencilAlt />
             Edit Event
           </Link>
-          <button className={styles.delete} onClick={deleteEventHandler}>
+          <a
+            className={styles.delete}
+            style={{ cursor: "pointer" }}
+            onClick={deleteEventHandler}
+          >
             <FaTimes /> Delete Event
-          </button>
+          </a>
         </div>
         <span>
           {evt.attributes.date} at {evt.attributes.time}
