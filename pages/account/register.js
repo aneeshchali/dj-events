@@ -13,13 +13,31 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
 
-  const { register } = useContext(AuthContext);
+  const { register, error } = useContext(AuthContext);
+
+  useEffect(() => {
+    error && toast.error(error);
+  }, [error]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log("first print");
 
     if (password !== passwordConfirm) {
       toast.error("Passwords do not match!");
+      return;
+    }
+    if (password === "" && passwordConfirm === "") {
+      toast.error("Passwords are empty");
+      return;
+    }
+    if (username === "") {
+      toast.error("Username is empty");
+      return;
+    }
+
+    if (email === "") {
+      toast.error("email is empty");
       return;
     }
 
@@ -71,7 +89,7 @@ export default function RegisterPage() {
             />
           </div>
 
-          <input type="submit" value="Login" className="btn" />
+          <input type="submit" value="Register" className="btn" />
         </form>
 
         <p>

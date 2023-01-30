@@ -17,7 +17,7 @@ function EventPage({ evt }) {
 
   const deleteEventHandler = async (e) => {
     if (confirm("are u sure")) {
-      console.log(evt.id);
+
       const res = await fetch(`${API_URL}/api/event/${evt.id}`, {
         method: "DELETE",
       });

@@ -55,7 +55,7 @@ function EditEventPage({ evt }) {
       toast.error("Something went wrong");
     } else {
       const evt = await res.json();
-      console.log(">>>>>>>>>>>>", evt);
+
       debugger;
       router.push(`/events/${evt.data.attributes.slug}`);
     }
@@ -67,7 +67,6 @@ function EditEventPage({ evt }) {
   };
 
   const imageUploaded = async (e) => {
-    console.log("===============================");
     const res = await fetch(`${API_URL}/api/event/${evt.data.id}?populate=*`);
     const data = await res.json();
     SetImgPreview(
@@ -185,7 +184,7 @@ export async function getServerSideProps({ params: { id } }) {
   const res = await fetch(`${API_URL}/api/event/${id}?populate=*`);
   const evt = await res.json();
 
-  console.log(evt);
+
 
   return {
     props: {

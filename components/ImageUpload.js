@@ -13,14 +13,12 @@ const ImageUpload = ({ evtId, imageUploaded }) => {
     formData.append("ref", "api::events.events");
     formData.append("refId", evtId);
     formData.append("field", "image");
-    console.log(formData);
     const res = await fetch(`${API_URL}/api/upload`, {
       method: "POST",
       body: formData,
     });
 
     if (res.ok) {
-      console.log("imgUpload");
       imageUploaded();
     }
   };

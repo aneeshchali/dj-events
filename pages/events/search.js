@@ -65,7 +65,7 @@ export async function getServerSideProps({ query: { term } }) {
   const events = await res.json();
 
   const fevents = events.data;
-  console.log(fevents);
+
   return {
     props: { fevents },
   };

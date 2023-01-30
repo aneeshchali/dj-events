@@ -14,6 +14,10 @@ export default function LoginPage() {
 
   const { login, error } = useContext(AuthContext);
 
+  useEffect(() => {
+    toast.error(error);
+  }, [error]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     login({ email, password });
@@ -50,7 +54,10 @@ export default function LoginPage() {
         </form>
 
         <p>
-          Don't have an account? <Link legacyBehavior href="/account/register">Register</Link>
+          Don't have an account?{" "}
+          <Link legacyBehavior href="/account/register">
+            Register
+          </Link>
         </p>
       </div>
     </Layout>

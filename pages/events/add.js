@@ -42,7 +42,7 @@ function AddEventPage() {
       toast.error("Something went wrong");
     } else {
       const evt = await res.json();
-      console.log(">>>>>>>>>>>>", evt);
+    
       debugger;
       router.push(`/events/${evt.data.attributes.slug}`);
     }

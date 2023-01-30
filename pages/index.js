@@ -29,7 +29,7 @@ export async function getStaticProps() {
   const events = await res.json();
 
   const fevents = events.data;
-  console.log(fevents);
+ 
   return {
     props: { fevents },
     revalidate: 1,

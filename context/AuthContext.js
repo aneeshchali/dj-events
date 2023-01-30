@@ -1,17 +1,39 @@
 import { createContext, useState, useEffect } from "react";
-import { useRouter } from "next/router";
-import { API_URL } from "@/config/index";
+import { Router, useRouter } from "next/router";
 import { NEXT_URL } from "@/config/index";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
+  const router = useRouter();
+
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
 
+  useEffect(() => {
+    const a = 10;
+    checkUserLoggedIn();
+  }, []);
+
   // Register user
   const register = async (user) => {
-    console.log(user);
+    const res = await fetch(`${NEXT_URL}/api/register`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(user),
+    });
+
+    const data = await res.json();
+    if (res.ok) {
+      setUser(data.user);
+      router.push("/");
+    } else {
+      setError(data.message);
+
+      setError(null);
+    }
   };
 
   // Login user
@@ -28,21 +50,38 @@ export const AuthProvider = ({ children }) => {
     });
 
     const data = await res.json();
-    console.log(data);
     if (res.ok) {
-      console.log(data);
+      setUser(data.user);
+      router.push("/");
     } else {
+      setError(data.message);
+
+      setError(null);
     }
   };
 
   // Logout user
   const logout = async () => {
-    console.log("Logout");
+    const res = await fetch(`${NEXT_URL}/api/logout`, {
+      method: "POST",
+    });
+
+    if (res.ok) {
+      setUser(null);
+      router.push("/");
+    }
   };
 
   // Check if user is logged in
-  const checkUserLoggedIn = async (user) => {
-    console.log("Check");
+  const checkUserLoggedIn = async () => {
+    const res = await fetch(`${NEXT_URL}/api/user`);
+    const data = await res.json();
+    console.log("aksdsgsegsergstehsr");
+    if (res.ok) {
+      setUser(data.user);
+    } else {
+      setUser(null);
+    }
   };
 
   return (
