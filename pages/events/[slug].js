@@ -15,21 +15,6 @@ function EventPage({ evt }) {
     return <h1>Loading..</h1>;
   }
 
-  const deleteEventHandler = async (e) => {
-    if (confirm("are u sure")) {
-
-      const res = await fetch(`${API_URL}/api/event/${evt.id}`, {
-        method: "DELETE",
-      });
-
-      const data = await res.json();
-      if (!res.ok) {
-        toast.error(data.message);
-      } else {
-        router.push("/events");
-      }
-    }
-  };
   return (
     <Layout>
       {/* <h2>{router.query.slug}</h2>
@@ -48,13 +33,6 @@ function EventPage({ evt }) {
             <FaPencilAlt />
             Edit Event
           </Link>
-          <a
-            className={styles.delete}
-            style={{ cursor: "pointer" }}
-            onClick={deleteEventHandler}
-          >
-            <FaTimes /> Delete Event
-          </a>
         </div>
         <span>
           {evt.attributes.date} at {evt.attributes.time}

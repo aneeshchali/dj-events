@@ -48,11 +48,11 @@ export const AuthProvider = ({ children }) => {
         password,
       }),
     });
-
+    console.log(res, ">>>>>>>>>>>");
     const data = await res.json();
     if (res.ok) {
       setUser(data.user);
-      router.push("/");
+      router.push("/account/dashboard");
     } else {
       setError(data.message);
 
@@ -76,7 +76,6 @@ export const AuthProvider = ({ children }) => {
   const checkUserLoggedIn = async () => {
     const res = await fetch(`${NEXT_URL}/api/user`);
     const data = await res.json();
-    console.log("aksdsgsegsergstehsr");
     if (res.ok) {
       setUser(data.user);
     } else {

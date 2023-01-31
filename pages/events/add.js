@@ -1,4 +1,5 @@
 import React from "react";
+import { parseCookies } from "@/helpers/index";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Layout from "@/components/Layout";
@@ -8,7 +9,7 @@ import { Router, useRouter } from "next/router";
 import { API_URL } from "@/config/index";
 import styles from "@/styles/Form.module.css";
 
-function AddEventPage() {
+function AddEventPage({ token }) {
   const router = useRouter();
   const [values, SetValues] = useState({
     name: "",
@@ -30,21 +31,29 @@ function AddEventPage() {
       toast.error("Please fill in all empty fields");
     }
 
+    console.log(values, ">>>>>>>>>>>>>>");
+
     const res = await fetch(`${API_URL}/api/event`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
       body: JSON.stringify({ data: values }),
     });
 
     // const fdata = res.data.attributes.slug;
 
     if (!res.ok) {
+      if (res.status === 403 || res.status === 401) {
+        toast.error("Not Signed In to ADD EVENT!");
+        return;
+      }
       toast.error("Something went wrong");
     } else {
       const evt = await res.json();
-    
-      debugger;
-      router.push(`/events/${evt.data.attributes.slug}`);
+      console.log(evt, "<<<<<<<<<<");
+      router.push(`/events/${evt.slug}`);
     }
   };
 
@@ -140,3 +149,10 @@ function AddEventPage() {
 }
 
 export default AddEventPage;
+
+export async function getServerSideProps({ req }) {
+  const { token } = parseCookies(req);
+  return {
+    props: { token },
+  };
+}
